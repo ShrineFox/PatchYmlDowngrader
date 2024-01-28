@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace PatchYml
 
                     if (line.Contains("utf8"))
                     {
-                        uint offset = BitConverter.ToUInt32(StringToByteArray(line.Split(',')[1].Trim()), 0);
+                        uint offset = BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt32(StringToByteArray(line.Split(',')[1].Trim()), 0));
                         string utf8 = line.Split(',')[2].Replace("\"", "").Replace("]", "").Trim();
                         byte[] utf8Bytes = Encoding.ASCII.GetBytes(utf8);
 
@@ -51,7 +52,7 @@ namespace PatchYml
                         {
                             if (strBytes.Count == 4)
                             {
-                                string offsetString = BitConverter.ToString(BitConverter.GetBytes(offset)).Replace("-", "");
+                                string offsetString = BitConverter.ToString(BitConverter.GetBytes(BinaryPrimitives.ReverseEndianness(offset))).Replace("-", "");
                                 string be32String = BitConverter.ToString(strBytes.ToArray()).Replace("-", "");
                                 patchLines.Add($"  - [ be32, 0x{offsetString}, 0x{be32String} ] # {utf8}");
                                 offset += 4;

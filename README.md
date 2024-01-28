@@ -5,5 +5,3 @@
 - arg 2: ``-new`` to output in new format, ``-old`` for old format  
 - arg 3: ``-str`` (optional) to downgrade strings  
 Output should appear next to ``.exe``.
-# Known Bugs
-- Offset doesn't increment for replaced strings yet (idk why)
